@@ -12,19 +12,24 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.RadioGroup;
 import android.widget.Toast;
 
+import com.google.gson.Gson;
+import com.zhy.http.okhttp.OkHttpUtils;
+import com.zhy.http.okhttp.callback.StringCallback;
 import com.zuofa.summer.R;
 import com.zuofa.summer.bean.User;
-import com.zuofa.summer.utils.L;
 
-import cn.bmob.v3.BmobUser;
-import cn.bmob.v3.exception.BmobException;
-import cn.bmob.v3.listener.SaveListener;
+
+import java.io.UnsupportedEncodingException;
+
+import okhttp3.Call;
+import okhttp3.Response;
 
 public class RegisterActivity extends AppCompatActivity implements View.OnClickListener {
 
@@ -34,7 +39,10 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
     private EditText student_id;
     private RadioGroup mRadioGroup;
     private Button register_submit;
-    private boolean sex;
+    private String sex = "男";
+
+    public RegisterActivity() throws UnsupportedEncodingException {
+    }
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -74,38 +82,72 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
                             public void onCheckedChanged(RadioGroup group, int checkedId) {
 
                                 if (checkedId == R.id.rb_boy) {
-                                    sex = true;
+                                    Log.e("summer", "男");
+                                    sex = "男";
                                 } else if (checkedId == R.id.rb_girl) {
-                                    sex = false;
+                                    Log.e("summer", "女");
+                                    sex = "女";
                                 }
                             }
                         });
                         User user = new User();
-                        user.setUsername(name);
+                        user.setName(name);
                         user.setPassword(password);
                         user.setSex(sex);
-                        user.setStudentId(Integer.parseInt(studentId));
-
-                        user.signUp(new SaveListener<User>() {
-                            @Override
-                            public void done(User user, BmobException e) {
-                                if (e == null) {
-                                    Toast.makeText(RegisterActivity.this,"注册成功",Toast.LENGTH_SHORT).show();
-                                    finish();
-                                }else {
-                                    L.e(e.toString());
-                                }
+                        user.setStudentid(studentId);
+                        //Log.e("summer",user.toString());
+                        /*try {
+                            Response response =OkHttpUtils
+                                    .get()
+                                    .url("http://192.168.2.101:8080/summer/RegisterServlet")
+                                    .addParams("json", new Gson().toJson(user))
+                                    .build()
+                                    .execute();
+                            if (Integer.parseInt(response.body().string())>0) {
+                                Toast.makeText(RegisterActivity.this,"注册成功",Toast.LENGTH_SHORT).show();
+                            }else {
+                                Toast.makeText(RegisterActivity.this,"注册失败",Toast.LENGTH_SHORT).show();
                             }
-                        });
-                    }else {
-                        Toast.makeText(this,"两次输入的密码不一致",Toast.LENGTH_SHORT).show();
+                        }catch (Exception e) {
+                            Log.e("summer","出错");
+                            e.printStackTrace();
+                        }*/
+
+                        OkHttpUtils
+                                .post()
+                                .url("http://192.168.2.101:8080/summer/RegisterServlet")
+                                .addParams("json", new Gson().toJson(user))
+                                .build()
+                                .execute(new StringCallback() {
+                                    @Override
+                                    public void onResponse(String response, int id) {
+                                        Log.e("summer", response);
+                                        try {
+                                            if (Integer.parseInt(response) > 0) {
+                                                Toast.makeText(RegisterActivity.this, "注册成功", Toast.LENGTH_SHORT).show();
+                                                finish();
+                                            } else {
+                                                Toast.makeText(RegisterActivity.this, "注册失败,此用户已经存在", Toast.LENGTH_SHORT).show();
+                                            }
+                                        } catch (NumberFormatException e) {
+                                            e.printStackTrace();
+                                        }
+
+                                    }
+
+                                    @Override
+                                    public void onError(Call call, Exception e, int id) {
+                                        Toast.makeText(RegisterActivity.this, "注册失败", Toast.LENGTH_SHORT).show();
+                                    }
+                                });
+
+                    } else {
+                        Toast.makeText(this, "两次输入的密码不一致", Toast.LENGTH_SHORT).show();
                     }
 
                 } else {
                     Toast.makeText(this, "输入框不能为空", Toast.LENGTH_SHORT).show();
                 }
-
-
                 break;
         }
     }

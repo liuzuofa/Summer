@@ -5,6 +5,7 @@ import android.support.v7.app.AppCompatActivity;
 
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
@@ -12,17 +13,22 @@ import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import com.google.gson.Gson;
+import com.zhy.http.okhttp.OkHttpUtils;
+import com.zhy.http.okhttp.callback.StringCallback;
 import com.zuofa.summer.MainActivity;
 import com.zuofa.summer.R;
+import com.zuofa.summer.application.BaseApplication;
 import com.zuofa.summer.bean.User;
 import com.zuofa.summer.utils.L;
 import com.zuofa.summer.utils.ShareUtils;
 
 import cn.bmob.v3.exception.BmobException;
 import cn.bmob.v3.listener.SaveListener;
+import okhttp3.Call;
 
 
-public class LoginActivity extends AppCompatActivity implements View.OnClickListener{
+public class LoginActivity extends AppCompatActivity implements View.OnClickListener {
 
 
     private EditText et_name;
@@ -31,8 +37,10 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     private Button login;
     private Button register;
 
-    private String mUserName;
-    private String mPassWord;
+    private String name;
+    private String password;
+
+    private User user = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -53,7 +61,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         boolean isKeep = ShareUtils.getBoolean(this, "keeppass", false);
         keep_password.setChecked(isKeep);
 
-        if(isKeep){
+        if (isKeep) {
             String name = ShareUtils.getString(this, "name", "");
             String password = ShareUtils.getString(this, "password", "");
             et_name.setText(name);
@@ -75,41 +83,50 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     }
 
     private void login() {
-        mUserName = et_name.getText().toString().trim();
-        mPassWord = et_password.getText().toString().trim();
-        if (!TextUtils.isEmpty(mUserName) ){
-            if (!TextUtils.isEmpty(mPassWord)) {
-                User user = new User();
-                user.setUsername(mUserName);
-                user.setPassword(mPassWord);
-                user.login(new SaveListener<User>() {
-                    @Override
-                    public void done(User user, BmobException e) {
-                        if (e == null) {
-                            //Toast.makeText(LoginActivity.this,"登陆成功",Toast.LENGTH_SHORT).show();
-                            Intent intent = new Intent(LoginActivity.this, MainActivity.class);
-                            Bundle bundle = new Bundle();
-                            bundle.putSerializable("user", user);
-                            intent.putExtras(bundle);
-                            startActivity(intent);
-                            finish();
-                        }else {
-                            L.e(e.toString());
-                        }
-                    }
-                });
-            }else {
-                Toast.makeText(this,"密码不能为空",Toast.LENGTH_SHORT).show();
+        name = et_name.getText().toString().trim();
+        password = et_password.getText().toString().trim();
+        if (!TextUtils.isEmpty(name)) {
+            if (!TextUtils.isEmpty(password)) {
+                OkHttpUtils
+                        .post()
+                        .url("http://192.168.2.101:8080/summer/LoginServlet")
+                        .addParams("name", name)
+                        .addParams("password", password)
+                        .build()
+                        .execute(new StringCallback() {
+                            @Override
+                            public void onError(Call call, Exception e, int id) {
+                                Toast.makeText(LoginActivity.this, "用户名或密码错误", Toast.LENGTH_SHORT).show();
+                            }
+
+                            @Override
+                            public void onResponse(String response, int id) {
+                                Gson gson = new Gson();
+                                user = gson.fromJson(response.trim(), User.class);
+                                Log.e("SUMMER",user.toString());
+                                Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+                                /*Bundle bundle = new Bundle();
+                                bundle.putSerializable("user", user);
+                                intent.putExtras(bundle);*/
+                                BaseApplication application = (BaseApplication) getApplication();
+                                application.setUser(user);
+                                startActivity(intent);
+                                finish();
+                            }
+                        });
+
+                //
+
+            } else {
+                Toast.makeText(this, "密码不能为空", Toast.LENGTH_SHORT).show();
             }
-        }else {
-            Toast.makeText(this,"用户名不能为空",Toast.LENGTH_SHORT).show();
+        } else {
+            Toast.makeText(this, "用户名不能为空", Toast.LENGTH_SHORT).show();
         }
-
-
     }
 
     private void register() {
-        startActivity(new Intent(LoginActivity.this,RegisterActivity.class));
+        startActivity(new Intent(LoginActivity.this, RegisterActivity.class));
     }
 
     //假设我现在输入用户名和密码，但是我不点击登录，而是直接退出了

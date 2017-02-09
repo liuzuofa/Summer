@@ -7,6 +7,8 @@ import android.view.MenuItem;
 
 import com.zuofa.summer.utils.StaticClass;
 
+import java.io.UnsupportedEncodingException;
+
 import cn.bmob.v3.Bmob;
 
 /**

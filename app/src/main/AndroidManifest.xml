@@ -50,7 +50,25 @@
             </intent-filter>
         </activity>
         <!-- 注册页 -->
-        <activity android:name="com.zuofa.summer.ui.RegisterActivity" />
+        <activity android:name="com.zuofa.summer.ui.RegisterActivity" >
+
+        </activity>
+
+        <!-- 查看用户信息 -->
+        <activity android:name="com.zuofa.summer.ui.ViewUserActivity" >
+        </activity>
+
+        <!-- 个人信息页 -->
+        <activity android:name="com.zuofa.summer.ui.InformationAcvtivity" >
+        </activity>
+
+        <!-- 联系我们 -->
+        <activity android:name="com.zuofa.summer.ui.ConnectActivity" >
+        </activity>
+
+        <!-- 关于我们 -->
+        <activity android:name="com.zuofa.summer.ui.AboutActivity" >
+        </activity>
     </application>
 
 </manifest>

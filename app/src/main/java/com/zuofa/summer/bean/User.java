@@ -1,56 +1,84 @@
 package com.zuofa.summer.bean;
 
-import cn.bmob.v3.BmobUser;
+
+import java.io.Serializable;
 
 /**
  * Created by 刘祚发 on 2017/1/26.
  */
-public class User extends BmobUser {
+public class User implements Serializable {
 
+    private int id;
+    private String name;
+    private String password;
+    private String nick;
+    private String sex;
+    private String profile;
+    private String studentid;
+    private String introduction;
 
-    private boolean sex;
-    private Integer studentId;
-    private String nick;//昵称
-    private String brief_introduction;//简介
-    private String profile;//头像地址
-
-    public boolean isSex() {
-        return sex;
+    public int getId() {
+        return id;
     }
-
-    public void setSex(boolean sex) {
-        this.sex = sex;
+    public void setId(int id) {
+        this.id = id;
     }
-
-    public String getProfile() {
-        return profile;
+    public String getName() {
+        return name;
     }
-
-    public void setProfile(String profile) {
-        this.profile = profile;
+    public void setName(String name) {
+        this.name = name;
     }
-
-    public String getBrief_introduction() {
-        return brief_introduction;
+    public String getPassword() {
+        return password;
     }
-
-    public void setBrief_introduction(String brief_introduction) {
-        this.brief_introduction = brief_introduction;
+    public void setPassword(String password) {
+        this.password = password;
     }
-
     public String getNick() {
         return nick;
     }
-
     public void setNick(String nick) {
         this.nick = nick;
     }
-
-    public Integer getStudentId() {
-        return studentId;
+    public String getSex() {
+        return sex;
+    }
+    public void setSex(String sex) {
+        this.sex = sex;
+    }
+    public String getProfile() {
+        return profile;
+    }
+    public void setProfile(String profile) {
+        this.profile = profile;
+    }
+    public String getStudentid() {
+        return studentid;
+    }
+    public void setStudentid(String studentid) {
+        this.studentid = studentid;
     }
 
-    public void setStudentId(Integer studentId) {
-        this.studentId = studentId;
+    public String getIntroduction() {
+        return introduction;
+    }
+
+    public void setIntroduction(String introduction) {
+        this.introduction = introduction;
+    }
+
+    @Override
+    public String toString() {
+        return "User{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", password='" + password + '\'' +
+                ", nick='" + nick + '\'' +
+                ", sex='" + sex + '\'' +
+                ", profile='" + profile + '\'' +
+                ", studentid='" + studentid + '\'' +
+                ", introduction='" + introduction + '\'' +
+                '}';
     }
 }

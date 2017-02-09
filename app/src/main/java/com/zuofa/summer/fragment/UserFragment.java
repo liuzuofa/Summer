@@ -8,38 +8,29 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
 import android.support.v4.app.Fragment;
-import android.support.v4.view.PagerAdapter;
-import android.support.v4.view.ViewPager;
-import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.zuofa.summer.R;
-import com.zuofa.summer.adapter.MyPagerAdapter;
+import com.zuofa.summer.application.BaseApplication;
 import com.zuofa.summer.bean.User;
+import com.zuofa.summer.ui.AboutActivity;
+import com.zuofa.summer.ui.ConnectActivity;
+import com.zuofa.summer.ui.LoginActivity;
+import com.zuofa.summer.ui.InformationAcvtivity;
 import com.zuofa.summer.utils.L;
 import com.zuofa.summer.view.CustomDialog;
 
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
-import java.util.ArrayList;
-import java.util.List;
 
-import cn.bmob.v3.Bmob;
-import cn.bmob.v3.datatype.BmobFile;
-import cn.bmob.v3.exception.BmobException;
-import cn.bmob.v3.listener.DownloadFileListener;
-import cn.bmob.v3.listener.ProgressCallback;
-import cn.bmob.v3.listener.UpdateListener;
-import cn.bmob.v3.listener.UploadFileListener;
+
 import de.hdodenhof.circleimageview.CircleImageView;
-import rx.functions.Action1;
 
 
 /**
@@ -49,12 +40,19 @@ public class UserFragment extends Fragment implements View.OnClickListener{
 
     private View view;
     private CircleImageView user_photo;
+    private TextView user_nick;
+    private TextView user_introduction;
     private CustomDialog customDialog;
     private TextView takePhoto;
     private TextView choosePhoto;
     private TextView btn_cancel;
 
-    private BmobFile bmobBackFile;
+    private LinearLayout connect;
+    private LinearLayout about;
+    private Button btn_quit;
+
+    private LinearLayout information;
+
     private User user;
 
     public static UserFragment newInstance(String argument) {
@@ -76,10 +74,16 @@ public class UserFragment extends Fragment implements View.OnClickListener{
     }
 
     private void initView() {
-        Intent intent = this.getActivity().getIntent();
-        user = (User) intent.getSerializableExtra("user");
+        BaseApplication application = (BaseApplication) this.getActivity().getApplication();
+        user = application.getUser();
         user_photo = (CircleImageView) view.findViewById(R.id.user_photo);
         user_photo.setOnClickListener(this);
+
+        user_nick = (TextView) view.findViewById(R.id.user_nick);
+        user_nick.setText(user.getNick());
+
+        user_introduction = (TextView) view.findViewById(R.id.user_introduction);
+        user_introduction.setText(user.getIntroduction());
 
         customDialog = new CustomDialog(getActivity(), 100, 100,
                 R.layout.dialog_photo, R.style.ActionSheetDialogStyle, Gravity.BOTTOM, R.style.ActionSheetDialogAnimation);
@@ -93,6 +97,14 @@ public class UserFragment extends Fragment implements View.OnClickListener{
         btn_cancel = (TextView) customDialog.findViewById(R.id.btn_cancel);
         btn_cancel.setOnClickListener(this);
 
+        information = (LinearLayout) view.findViewById(R.id.information);
+        information.setOnClickListener(this);
+        connect = (LinearLayout) view.findViewById(R.id.connect);
+        connect.setOnClickListener(this);
+        about = (LinearLayout) view.findViewById(R.id.about);
+        about.setOnClickListener(this);
+        btn_quit = (Button) view.findViewById(R.id.btn_quit);
+        btn_quit.setOnClickListener(this);
 
     }
 
@@ -111,9 +123,23 @@ public class UserFragment extends Fragment implements View.OnClickListener{
             case R.id.choosePhoto:
                 toPhoto();
                 break;
+            case R.id.information:
+                startActivity(new Intent(getActivity(), InformationAcvtivity.class));
+                break;
+            case R.id.connect:
+                startActivity(new Intent(getActivity(), ConnectActivity.class));
+                break;
+            case R.id.about:
+                startActivity(new Intent(getActivity(), AboutActivity.class));
+                break;
+            case R.id.btn_quit:
+                quit();
+                break;
         }
 
     }
+
+
 
     public static final String PHOTO_IMAGE_FILE_NAME = "fileImg.jpg";
     public static final int CAMERA_REQUEST_CODE = 100;
@@ -208,7 +234,7 @@ public class UserFragment extends Fragment implements View.OnClickListener{
                 // TODO Auto-generated catch block
                 e.printStackTrace();
             }
-            final BmobFile bmobFile = new BmobFile(file);
+            /*final BmobFile bmobFile = new BmobFile(file);
             bmobFile.upload(new UploadFileListener() {
                 @Override
                 public void done(BmobException e) {
@@ -218,12 +244,12 @@ public class UserFragment extends Fragment implements View.OnClickListener{
             Toast.makeText(UserFragment.this.getContext(),
                     "上传文件成功:" + bmobFile.getUrl(),Toast.LENGTH_SHORT).show();
 
-            L.e("上传文件成功");
+            L.e("上传文件成功");*/
             user_photo.setImageBitmap(bitmap);
         }
     }
 
-    private void updateDate(String date) {
+    /*private void updateDate(String date) {
         user.setProfile(date);
         user.update(user.getObjectId(), new UpdateListener() {
             @Override
@@ -236,7 +262,15 @@ public class UserFragment extends Fragment implements View.OnClickListener{
             }
         });
 
+    }*/
+
+    private void quit() {
+        if (user !=null) {
+            user =null;
+            startActivity(new Intent(getActivity(), LoginActivity.class));
+        }
     }
+
 
 
 }

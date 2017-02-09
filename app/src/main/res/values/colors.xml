@@ -65,7 +65,6 @@
     <color name="orchid">#da70d6</color> <!-- 淡紫色 -->
     <color name="thistle">#d8bfd8</color> <!-- 蓟色 -->
     <color name="lightgray">#d3d3d3</color> <!-- 亮灰色 -->
-    <color name="lightgrey">#d3d3d3</color> <!-- 亮灰色 -->
     <color name="tan">#d2b48c</color> <!-- 茶色 -->
     <color name="chocolate">#d2691e</color> <!-- 巧可力色 -->
     <color name="peru">#cd853f</color> <!-- 秘鲁色 -->
@@ -99,7 +98,6 @@
     <color name="lightskyblue">#87cefa</color> <!-- 亮天蓝色 -->
     <color name="skyblue">#87ceeb</color> <!-- 天蓝色 -->
     <color name="gray">#808080</color> <!-- 灰色 -->
-    <color name="grey">#808080</color> <!-- 灰色 -->
     <color name="olive">#808000</color> <!-- 橄榄色 -->
     <color name="purple">#800080</color> <!-- 紫色 -->
     <color name="maroon">#800000</color> <!-- 粟色 -->
@@ -108,13 +106,11 @@
     <color name="lawngreen">#7cfc00</color> <!-- 草绿色 -->
     <color name="mediumslateblue">#7b68ee</color> <!-- 中暗蓝色 -->
     <color name="lightslategray">#778899</color> <!-- 亮蓝灰 -->
-    <color name="lightslategrey">#778899</color> <!-- 亮蓝灰 -->
     <color name="slategray">#708090</color> <!-- 灰石色 -->
-    <color name="slategrey">#708090</color> <!-- 灰石色 -->
     <color name="olivedrab">#6b8e23</color> <!-- 深绿褐色 -->
     <color name="slateblue">#6a5acd</color> <!-- 石蓝色 -->
     <color name="dimgray">#696969</color> <!-- 暗灰色 -->
-    <color name="dimgrey">#696969</color> <!-- 暗灰色 -->
+    <color name="bggray">#FFC9C9C9</color> <!-- 暗灰色 -->
     <color name="mediumaquamarine">#66cdaa</color> <!-- 中绿色 -->
     <color name="cornflowerblue">#6495ed</color> <!-- 菊兰色 -->
     <color name="cadetblue">#5f9ea0</color> <!-- 军兰色 -->
@@ -135,7 +131,6 @@
     <color name="dodgerblue">#1e90ff</color> <!-- 闪兰色 -->
     <color name="midnightblue">#191970</color> <!-- 中灰兰色 -->
     <color name="aqua">#00ffff</color> <!-- 浅绿色 -->
-    <color name="cyan">#00ffff</color> <!-- 青色 -->
     <color name="springgreen">#00ff7f</color> <!-- 春绿色 -->
     <color name="lime">#00ff00</color> <!-- 酸橙色 -->
     <color name="mediumspringgreen">#00fa9a</color> <!-- 中春绿色 -->

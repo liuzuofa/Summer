@@ -48,5 +48,10 @@
         <item name="android:windowEnterAnimation">@animator/actionsheet_dialog_in</item>
         <item name="android:windowExitAnimation">@animator/actionsheet_dialog_out</item>
     </style>
+    <!--    ChangeInfo进出动画 -->
+    <style name="ChangeInfoDialogAnimation" parent="@android:style/Animation.Dialog">
+        <item name="android:windowEnterAnimation">@animator/dialog_change_info_in</item>
+        <item name="android:windowExitAnimation">@animator/dialog_change_info_out</item>
+    </style>
 
 </resources>
