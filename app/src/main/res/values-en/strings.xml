@@ -1,0 +1,14 @@
+<resources>
+    <string name="app_name">Summer</string>
+    <string name="login">login</string>
+    <string name="register">register</string>
+    <string name="user_name">name</string>
+    <string name="user_password">password</string>
+    <string name="user_password1">password again</string>
+    <string name="submit">submit</string>
+    <string name="boy">boy</string>
+    <string name="girl">girl</string>
+    <string name="student_id">student id</string>
+    <string name="text_keep_password">keep password</string>
+    <string name="introduction">introduction</string>
+</resources>
