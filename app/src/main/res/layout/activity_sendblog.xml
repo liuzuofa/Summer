@@ -1,0 +1,33 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context=".MainActivity">
+
+
+    <EditText
+        android:layout_marginLeft="10dp"
+        android:id="@+id/send_blogContent"
+        android:layout_width="match_parent"
+        android:background="@null"
+        android:layout_height="100dp"
+        android:hint="这一刻你的想法..." />
+
+    <View
+        android:layout_margin="10dp"
+        android:layout_width="match_parent"
+        android:layout_height="1px"
+        android:background="#9e9e9e"/>
+
+    <GridView
+        android:id="@+id/girdView"
+        android:layout_margin="5dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:horizontalSpacing="5dip"
+        android:numColumns="4"
+        android:verticalSpacing="5dip" />
+
+</LinearLayout>

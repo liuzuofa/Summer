@@ -20,11 +20,9 @@ import com.zuofa.summer.MainActivity;
 import com.zuofa.summer.R;
 import com.zuofa.summer.application.BaseApplication;
 import com.zuofa.summer.bean.User;
-import com.zuofa.summer.utils.L;
 import com.zuofa.summer.utils.ShareUtils;
+import com.zuofa.summer.utils.StaticClass;
 
-import cn.bmob.v3.exception.BmobException;
-import cn.bmob.v3.listener.SaveListener;
 import okhttp3.Call;
 
 
@@ -89,7 +87,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
             if (!TextUtils.isEmpty(password)) {
                 OkHttpUtils
                         .post()
-                        .url("http://192.168.2.101:8080/summer/LoginServlet")
+                        .url(StaticClass.URL+"LoginServlet")
                         .addParams("name", name)
                         .addParams("password", password)
                         .build()

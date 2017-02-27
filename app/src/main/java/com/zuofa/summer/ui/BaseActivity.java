@@ -5,11 +5,8 @@ import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.view.MenuItem;
 
-import com.zuofa.summer.utils.StaticClass;
 
-import java.io.UnsupportedEncodingException;
 
-import cn.bmob.v3.Bmob;
 
 /**
  * Created by 刘祚发 on 2017/1/29.

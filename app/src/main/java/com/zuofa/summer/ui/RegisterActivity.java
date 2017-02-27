@@ -24,6 +24,7 @@ import com.zhy.http.okhttp.OkHttpUtils;
 import com.zhy.http.okhttp.callback.StringCallback;
 import com.zuofa.summer.R;
 import com.zuofa.summer.bean.User;
+import com.zuofa.summer.utils.StaticClass;
 
 
 import java.io.UnsupportedEncodingException;
@@ -31,7 +32,7 @@ import java.io.UnsupportedEncodingException;
 import okhttp3.Call;
 import okhttp3.Response;
 
-public class RegisterActivity extends AppCompatActivity implements View.OnClickListener {
+public class RegisterActivity extends BaseActivity implements View.OnClickListener {
 
     private EditText register_name;
     private EditText register_password;
@@ -115,7 +116,7 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
 
                         OkHttpUtils
                                 .post()
-                                .url("http://192.168.2.101:8080/summer/RegisterServlet")
+                                .url(StaticClass.URL+"RegisterServlet")
                                 .addParams("json", new Gson().toJson(user))
                                 .build()
                                 .execute(new StringCallback() {

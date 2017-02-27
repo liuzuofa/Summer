@@ -9,4 +9,6 @@ public class StaticClass {
     public static final int HANDLER_SPLASH = 1001;
     public static final String SHARE_IS_FIRST = "isFirst";
     public static final String Bmob_Application_ID="2d79e34c1e2b750c34eecae8ffab8585";
+    public static final String URL = "http://192.168.0.18:8080/summer/";
+    public static final String PROFILE_URL =StaticClass.URL.substring(0,StaticClass.URL.length()-1) ;
 }

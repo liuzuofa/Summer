@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -15,7 +16,11 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.zhy.http.okhttp.OkHttpUtils;
+import com.zhy.http.okhttp.callback.BitmapCallback;
+import com.zhy.http.okhttp.callback.StringCallback;
 import com.zuofa.summer.R;
 import com.zuofa.summer.application.BaseApplication;
 import com.zuofa.summer.bean.User;
@@ -24,6 +29,7 @@ import com.zuofa.summer.ui.ConnectActivity;
 import com.zuofa.summer.ui.LoginActivity;
 import com.zuofa.summer.ui.InformationAcvtivity;
 import com.zuofa.summer.utils.L;
+import com.zuofa.summer.utils.StaticClass;
 import com.zuofa.summer.view.CustomDialog;
 
 import java.io.File;
@@ -31,12 +37,13 @@ import java.io.FileOutputStream;
 
 
 import de.hdodenhof.circleimageview.CircleImageView;
+import okhttp3.Call;
 
 
 /**
  * A simple {@link Fragment} subclass.
  */
-public class UserFragment extends Fragment implements View.OnClickListener{
+public class UserFragment extends Fragment implements View.OnClickListener {
 
     private View view;
     private CircleImageView user_photo;
@@ -77,6 +84,9 @@ public class UserFragment extends Fragment implements View.OnClickListener{
         BaseApplication application = (BaseApplication) this.getActivity().getApplication();
         user = application.getUser();
         user_photo = (CircleImageView) view.findViewById(R.id.user_photo);
+        if (user.getProfile() != null) {
+            showProfile(user.getProfile());
+        }
         user_photo.setOnClickListener(this);
 
         user_nick = (TextView) view.findViewById(R.id.user_nick);
@@ -106,6 +116,27 @@ public class UserFragment extends Fragment implements View.OnClickListener{
         btn_quit = (Button) view.findViewById(R.id.btn_quit);
         btn_quit.setOnClickListener(this);
 
+    }
+
+    //显示头像
+    private void showProfile(String profile) {
+        L.e(profile);
+        OkHttpUtils
+                .get()//
+                .url(StaticClass.URL.substring(0,StaticClass.URL.length()-1) + profile)//
+                .build()//
+                .execute(new BitmapCallback() {
+                    @Override
+                    public void onError(Call call, Exception e, int id) {
+
+                    }
+
+                    @Override
+                    public void onResponse(Bitmap response, int id) {
+                        L.e("网络下载的图片");
+                        user_photo.setImageBitmap(response);
+                    }
+                });
     }
 
     @Override
@@ -138,7 +169,6 @@ public class UserFragment extends Fragment implements View.OnClickListener{
         }
 
     }
-
 
 
     public static final String PHOTO_IMAGE_FILE_NAME = "fileImg.jpg";
@@ -218,15 +248,15 @@ public class UserFragment extends Fragment implements View.OnClickListener{
     private void setImageToView(Intent data) {
         Bundle bundle = data.getExtras();
         if (bundle != null) {
-            Bitmap bitmap = bundle.getParcelable("data");
+            final Bitmap bitmap = bundle.getParcelable("data");
             //将bitmap保存到本地
-            File file = new File(Environment.getExternalStorageDirectory(),"profile.jpeg");
+            File file = new File(Environment.getExternalStorageDirectory(), "profile.png");
             if (file.exists()) {
                 file.delete();
             }
             try {
                 FileOutputStream out = new FileOutputStream(file);
-                bitmap.compress(Bitmap.CompressFormat.JPEG, 100, out);
+                bitmap.compress(Bitmap.CompressFormat.PNG, 100, out);
                 out.flush();
                 out.close();
                 L.e("已经保存");
@@ -234,43 +264,36 @@ public class UserFragment extends Fragment implements View.OnClickListener{
                 // TODO Auto-generated catch block
                 e.printStackTrace();
             }
-            /*final BmobFile bmobFile = new BmobFile(file);
-            bmobFile.upload(new UploadFileListener() {
-                @Override
-                public void done(BmobException e) {
+            OkHttpUtils.post()//
+                    .addFile("mFile", user.getName() + ".png", file)//
+                    .url(StaticClass.URL+"ImageUploadServlet")
+                    .build()//
+                    .execute(new StringCallback() {
+                        @Override
+                        public void onError(Call call, Exception e, int id) {
+                            Toast.makeText(getActivity(), "上传失败", Toast.LENGTH_SHORT).show();
+                        }
 
-                }
-            });
-            Toast.makeText(UserFragment.this.getContext(),
-                    "上传文件成功:" + bmobFile.getUrl(),Toast.LENGTH_SHORT).show();
+                        @Override
+                        public void onResponse(String response, int id) {
+                            if ("success".equals(response)) {
+                                Toast.makeText(getActivity(), "上传成功", Toast.LENGTH_SHORT).show();
+                                user_photo.setImageBitmap(bitmap);
+                            } else {
+                                Toast.makeText(getActivity(), "上传失败", Toast.LENGTH_SHORT).show();
+                            }
+                        }
+                    });
 
-            L.e("上传文件成功");*/
-            user_photo.setImageBitmap(bitmap);
         }
     }
 
-    /*private void updateDate(String date) {
-        user.setProfile(date);
-        user.update(user.getObjectId(), new UpdateListener() {
-            @Override
-            public void done(BmobException e) {
-                if(e==null){
-                    L.e("更新成功");
-                }else{
-                    L.e("更新失败："+e.getMessage()+","+e.getErrorCode());
-                }
-            }
-        });
-
-    }*/
-
     private void quit() {
-        if (user !=null) {
-            user =null;
+        if (user != null) {
+            user = null;
             startActivity(new Intent(getActivity(), LoginActivity.class));
         }
     }
-
 
 
 }

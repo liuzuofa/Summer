@@ -27,21 +27,28 @@ dependencies {
     compile 'com.ashokvarma.android:bottom-navigation-bar:1.3.1'
     compile 'com.android.support:support-v4:25.1.1'
     compile 'com.android.support:design:25.1.1'
-    //以下SDK开发者请根据需要自行选择
-    //bmob-sdk：Bmob的android sdk包，包含了Bmob的数据存储、文件等服务，以下是最新的bmob-sdk:
-    //3.5.0：请务必查看下面注释[1]
-    compile 'cn.bmob.android:bmob-sdk:3.5.0'
-
-    //bmob-im：Bmob的即时通讯包，注意每个版本的im依赖特定版本的bmob-sdk，具体的依赖关系可查看下面注释[2]
-    //compile 'cn.bmob.android:bmob-im:2.0.5@aar'
-    //compile 'cn.bmob.android:bmob-sdk:3.4.7-aar'
-
-    //如果你想应用能够兼容Android6.0，请添加此依赖(org.apache.http.legacy.jar)
-    compile 'cn.bmob.android:http-legacy:1.0'
+    compile 'com.android.support:cardview-v7:25.1.1'
     compile 'com.github.bumptech.glide:glide:3.7.0'
-
     //圆形图片框架
     compile 'de.hdodenhof:circleimageview:2.1.0'
     //张鸿洋大神ok http框架
     compile 'com.zhy:okhttputils:2.6.2'
+    //二维码
+    compile project(path: ':libzxing')
+    compile 'com.android.support:recyclerview-v7:25.1.1'
+    //recycle view上啦刷新下拉加载
+    compile 'com.wuxiaolong.pullloadmorerecyclerview:library:1.1.2'
+    //谷歌json解析
+    compile 'com.google.code.gson:gson:2.8.0'
+    //张鸿洋listview
+    compile 'com.zhy:base-adapter:3.0.3'
+    //picassot图片加载
+    compile 'com.squareup.picasso:picasso:2.5.2'
+    compile 'com.jcodecraeer:xrecyclerview:1.2.7'
+    //九宫格图片和图片选择器
+    compile 'com.jaeger.ninegridimageview:library:1.1.0'
+    compile 'cc.dagger:photopicker:1.0'
+    compile 'com.github.chrisbanes.photoview:library:1.2.4'
+    compile 'me.relex:photodraweeview:1.0.0'
+
 }

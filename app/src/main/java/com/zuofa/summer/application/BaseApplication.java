@@ -8,7 +8,6 @@ import com.zuofa.summer.utils.StaticClass;
 
 import java.util.concurrent.TimeUnit;
 
-import cn.bmob.v3.Bmob;
 import okhttp3.OkHttpClient;
 
 /**
@@ -22,7 +21,7 @@ public class BaseApplication extends Application {
     public void onCreate() {
         super.onCreate();
         //Bmob初始化
-        Bmob.initialize(this, StaticClass.Bmob_Application_ID);
+        //Bmob.initialize(this, StaticClass.Bmob_Application_ID);
 
         //初始化Okhttp
         OkHttpClient okHttpClient = new OkHttpClient.Builder()

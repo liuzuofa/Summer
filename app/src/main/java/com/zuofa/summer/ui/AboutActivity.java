@@ -9,7 +9,7 @@ import com.zuofa.summer.R;
 /**
  * Created by 刘祚发 on 2017/1/30.
  */
-public class AboutActivity extends AppCompatActivity {
+public class AboutActivity extends BaseActivity {
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {

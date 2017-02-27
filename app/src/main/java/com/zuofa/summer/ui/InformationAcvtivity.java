@@ -8,6 +8,7 @@ package com.zuofa.summer.ui;
  *  描述：    TODO
  */
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
@@ -25,11 +26,12 @@ import com.zhy.http.okhttp.callback.StringCallback;
 import com.zuofa.summer.R;
 import com.zuofa.summer.application.BaseApplication;
 import com.zuofa.summer.bean.User;
+import com.zuofa.summer.utils.StaticClass;
 import com.zuofa.summer.view.CustomDialog;
 
 import okhttp3.Call;
 
-public class InformationAcvtivity extends AppCompatActivity implements View.OnClickListener{
+public class InformationAcvtivity extends BaseActivity implements View.OnClickListener {
 
     private ImageView change_profile;
     private TextView change_nick;
@@ -44,7 +46,7 @@ public class InformationAcvtivity extends AppCompatActivity implements View.OnCl
 
     private User user;
     private String status;
-
+    private boolean isUpdate = false;
 
 
     @Override
@@ -59,7 +61,7 @@ public class InformationAcvtivity extends AppCompatActivity implements View.OnCl
 
         BaseApplication application = (BaseApplication) getApplication();
         user = application.getUser();
-        Log.e("summer",user.toString());
+        Log.e("summer", user.toString());
         change_profile = (ImageView) findViewById(R.id.change_profile);
         change_profile.setOnClickListener(this);
 
@@ -92,18 +94,20 @@ public class InformationAcvtivity extends AppCompatActivity implements View.OnCl
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.change_nick:
-                status ="nick";
+                status = "nick";
+                dialog_et.setText("");
                 customDialog.show();
                 break;
             case R.id.change_QRcode:
-
+                startActivity(new Intent(InformationAcvtivity.this,RQcodeActivity.class));
                 break;
             case R.id.change_introduction:
-                status ="introduction";
+                status = "introduction";
+                dialog_et.setText("");
                 customDialog.show();
                 break;
             case R.id.btn_change_confirm:
-                Log.e("summer",status);
+                Log.e("summer", status);
                 changeUserInfo(status);
                 customDialog.dismiss();
                 break;
@@ -114,7 +118,7 @@ public class InformationAcvtivity extends AppCompatActivity implements View.OnCl
 
     }
 
-    private void changeUserInfo (String params) {
+    private void changeUserInfo(String params) {
         String s = dialog_et.getText().toString().trim();
        /* String ss ="";
         try {
@@ -122,35 +126,37 @@ public class InformationAcvtivity extends AppCompatActivity implements View.OnCl
         }catch (UnsupportedEncodingException e) {
             e.printStackTrace();
         }*/
-        Log.e("summer",s);
+        Log.e("summer", s);
 
         OkHttpUtils
                 .post()
-                .url("http://192.168.2.101:8080/summer/ChangeUserInfoServlet")
+                .url(StaticClass.URL+"ChangeUserInfoServlet")
                 .addParams("params", params)
-                .addParams("value",s)
+                .addParams("value", s)
                 .addParams("name", user.getName())
-                //.addHeader("Content-Type", "text/html;charset=utf-8")
                 .build()
                 .execute(new StringCallback() {
                     @Override
                     public void onError(Call call, Exception e, int id) {
-                        Toast.makeText(InformationAcvtivity.this,"修改失败",Toast.LENGTH_SHORT).show();
+                        Toast.makeText(InformationAcvtivity.this, "修改失败", Toast.LENGTH_SHORT).show();
                     }
 
                     @Override
                     public void onResponse(String response, int id) {
-                        if (Integer.parseInt(response.trim()) >0){
-                            Toast.makeText(InformationAcvtivity.this,"修改成功",Toast.LENGTH_SHORT).show();
-                        }else {
-                            Toast.makeText(InformationAcvtivity.this,"修改失败",Toast.LENGTH_SHORT).show();
+                        if (Integer.parseInt(response.trim()) > 0) {
+                            Toast.makeText(InformationAcvtivity.this, "修改成功", Toast.LENGTH_SHORT).show();
+                            isUpdate = true;
+                        } else {
+                            Toast.makeText(InformationAcvtivity.this, "修改失败", Toast.LENGTH_SHORT).show();
                         }
                     }
                 });
-        if ("nick".equals(params)) {
-            change_nick.setText(s);
-        }else if ("introduction".equals(params)){
-            change_introduction.setText(s);
+        if (isUpdate) {
+            if ("nick".equals(params)) {
+                change_nick.setText(s);
+            } else if ("introduction".equals(params)) {
+                change_introduction.setText(s);
+            }
         }
     }
 }

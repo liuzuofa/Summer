@@ -12,13 +12,14 @@ import com.zhy.http.okhttp.OkHttpUtils;
 import com.zhy.http.okhttp.callback.StringCallback;
 import com.zhy.http.okhttp.https.HttpsUtils;
 import com.zuofa.summer.R;
+import com.zuofa.summer.utils.StaticClass;
 
 import okhttp3.Call;
 
 /**
  * Created by 刘祚发 on 2017/1/30.
  */
-public class ConnectActivity extends AppCompatActivity {
+public class ConnectActivity extends BaseActivity {
 
     private TextView connect_theme;
     private TextView connect_content;
@@ -42,7 +43,7 @@ public class ConnectActivity extends AppCompatActivity {
                 String content = connect_content.getText().toString().trim();
                 OkHttpUtils
                         .post()
-                        .url("http://192.168.2.101:8080/summer/ConnectServlet")
+                        .url(StaticClass.URL+"ConnectServlet")
                         .addParams("theme", theme)
                         .addParams("content",content)
                         .build()
