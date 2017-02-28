@@ -265,6 +265,7 @@ public class UserFragment extends Fragment implements View.OnClickListener {
                 e.printStackTrace();
             }
             OkHttpUtils.post()//
+                    //.addParams("method","uploadProfile")
                     .addFile("mFile", user.getName() + ".png", file)//
                     .url(StaticClass.URL+"ImageUploadServlet")
                     .build()//

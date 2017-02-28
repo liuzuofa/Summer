@@ -25,20 +25,28 @@ import android.widget.BaseAdapter;
 import android.widget.EditText;
 import android.widget.GridView;
 import android.widget.ImageView;
+import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
+import com.zhy.http.okhttp.OkHttpUtils;
+import com.zhy.http.okhttp.callback.StringCallback;
 import com.zuofa.summer.R;
 import com.zuofa.summer.application.BaseApplication;
 import com.zuofa.summer.bean.MicroBlog;
 import com.zuofa.summer.bean.User;
 import com.zuofa.summer.utils.GlideImageLoader;
+import com.zuofa.summer.utils.StaticClass;
 import com.zuofa.summer.utils.UtilTools;
 
+import java.io.File;
 import java.util.ArrayList;
+import java.util.List;
 
 import cc.dagger.photopicker.PhotoPicker;
 import cc.dagger.photopicker.picker.PhotoFilter;
+import okhttp3.Call;
 
 
 public class SendBlogActivity extends AppCompatActivity{
@@ -49,6 +57,9 @@ public class SendBlogActivity extends AppCompatActivity{
     private ArrayList<String> mSelectPath;
     private GridView girdView;
     private GirdImageAdapter adapter;
+    private String photoPath;
+    private int count;
+    private String time;
 
 
     @Override
@@ -114,6 +125,18 @@ public class SendBlogActivity extends AppCompatActivity{
             if (resultCode == RESULT_OK) {
                 mSelectPath = data.getStringArrayListExtra(PhotoPicker.EXTRA_RESULT);
                 adapter.changeDate(mSelectPath);
+                StringBuilder sb = new StringBuilder();
+                time = UtilTools.getNowTime();
+                for (int i = 0; i <mSelectPath.size(); i++) {
+                    sb.append(user.getName());
+                    sb.append("/");
+                    sb.append(time);
+                    sb.append("/");
+                    sb.append(Integer.toString(i));
+                    sb.append(".JPG");
+                    sb.append(";");
+                }
+                photoPath = sb.toString();
 
             }
         }
@@ -121,9 +144,104 @@ public class SendBlogActivity extends AppCompatActivity{
             if (resultCode == RESULT_OK) {
                 mSelectPath = data.getStringArrayListExtra(PhotoPicker.PATHS);
                 adapter.changeDate(mSelectPath);
+                StringBuilder sb = new StringBuilder();
+                time = UtilTools.getNowTime();
+                for (int i = 0; i <mSelectPath.size(); i++) {
+                    sb.append(user.getName());
+                    sb.append("/");
+                    sb.append(time);
+                    sb.append("/");
+                    sb.append(Integer.toString(i));
+                    sb.append(".JPG");
+                    sb.append(";");
+                }
+                photoPath = sb.toString();
             }
         }
     }
+
+
+
+
+    private void sendBlog() {
+        MicroBlog microBlog = new MicroBlog();
+        microBlog.setName(user.getName());
+        microBlog.setNick(user.getNick());
+        microBlog.setProfile(user.getProfile());
+        microBlog.setWeibo_content(send_blogContent.getText().toString().trim());
+        microBlog.setWeibo_photo(photoPath);
+        microBlog.setWeibo_date(UtilTools.getNowTime());
+        microBlog.setAdmire_count(0);
+        microBlog.setComment_count(0);
+
+        String json=new Gson().toJson(microBlog);
+
+        Log.e("json",json);
+        OkHttpUtils
+                .post()
+                .addParams("method","getBlog")
+                .url(StaticClass.URL+"WeiboServlet")
+                .build()
+                .execute(new StringCallback() {
+                    @Override
+                    public void onError(Call call, Exception e, int id) {
+                    }
+                    @Override
+                    public void onResponse(String response, int id) {
+                        if ("success".equals(response)) {
+                            uploadImages();
+                            finish();
+                        } else {
+                            Toast.makeText(SendBlogActivity.this, "发送失败", Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                });
+    }
+    private void uploadImages(){
+        for (int i = 0; i < mSelectPath.size(); i++) {
+            count = i;
+            String[] pp = photoPath.split(";");
+            OkHttpUtils.post()//
+                    .addFile("mFile",pp[i], new File(mSelectPath.get(i)))//
+                    .url(StaticClass.URL+"ImageUploadServlet")
+                    .build()//
+                    .execute(new StringCallback() {
+                        @Override
+                        public void onError(Call call, Exception e, int id) {
+                            //Toast.makeText(SendBlogActivity.this, "上传失败", Toast.LENGTH_SHORT).show();
+                        }
+
+                        @Override
+                        public void onResponse(String response, int id) {
+                            if ("success".equals(response)) {
+                                Toast.makeText(SendBlogActivity.this, "第"+count+"张图片上传成功", Toast.LENGTH_SHORT).show();
+                            } else {
+                                Toast.makeText(SendBlogActivity.this, "第"+count+"张图片上传失败", Toast.LENGTH_SHORT).show();
+                            }
+                        }
+                    });
+        }
+
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.toolbar,menu);
+        menuItem =menu.findItem(R.id.send);
+        menuItem.setVisible(true);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()){
+            case R.id.send:
+                sendBlog();
+                break;
+        }
+        return true;
+    }
+
 
     public class GirdImageAdapter extends BaseAdapter {
         private ArrayList<String> mPath = new ArrayList<>();
@@ -185,61 +303,10 @@ public class SendBlogActivity extends AppCompatActivity{
                 imageView.setImageResource(R.drawable.pick_photo);
             } else {
                 Glide.with(mContext).load(mPath.get(i)).into(imageView);
-                //imageView.setImageResource(ImageBox[position]);
             }
             return imageView;
         }
 
-    }
-
-
-    private void sendBlog() {
-        MicroBlog microBlog = new MicroBlog();
-        microBlog.setName(user.getName());
-        microBlog.setNick(user.getNick());
-        microBlog.setProfile(user.getProfile());
-        microBlog.setWeibo_content(send_blogContent.getText().toString().trim());
-        //microBlog.setWeibo_photo(paths);
-        microBlog.setWeibo_date(UtilTools.getNowTime());
-        microBlog.setAdmire_count(0);
-        microBlog.setComment_count(0);
-
-        String json=new Gson().toJson(microBlog);
-        Log.e("json",json);
-        /*OkHttpUtils
-                .post()
-                .addParams("method","sendBlog")
-                .addParams("json",json)
-                .url(StaticClass.URL+"WeiboServlet")
-                .build()
-                .execute(new StringCallback() {
-                    @Override
-                    public void onError(Call call, Exception e, int id) {
-                    }
-                    @Override
-                    public void onResponse(String response, int id) {
-                        Gson gson = new Gson();
-
-                    }
-                });*/
-    }
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.toolbar,menu);
-        menuItem =menu.findItem(R.id.send);
-        menuItem.setVisible(true);
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()){
-            case R.id.send:
-
-                break;
-        }
-        return true;
     }
 
 }
