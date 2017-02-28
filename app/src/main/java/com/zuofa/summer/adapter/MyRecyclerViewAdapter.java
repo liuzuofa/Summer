@@ -111,6 +111,10 @@ public class MyRecyclerViewAdapter extends RecyclerView.Adapter<MyRecyclerViewAd
         holder.weibo_time.setText(microBlogsList.get(position).getWeibo_date());
         holder.weibo_phone_type.setText("来自 "+SystemUtils.getDeviceBrand());
         holder.weibo_content.setText(microBlogsList.get(position).getWeibo_content());
+        if (microBlogsList.get(position).getWeibo_photo().isEmpty()) {
+            holder.nineImage_view.setVisibility(View.GONE);
+        }else {
+        }
         holder.nineImage_view.setVisibility(View.VISIBLE);
         holder.btn_weibo_comment.setOnClickListener(new View.OnClickListener() {
             @Override

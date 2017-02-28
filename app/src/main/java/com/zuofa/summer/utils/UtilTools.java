@@ -37,6 +37,10 @@ public class UtilTools {
         SimpleDateFormat sdf=new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         return sdf.format(new Date());
     }
+    public static String getNowTimeString(){
+        SimpleDateFormat sdf=new SimpleDateFormat("yyyy-MM-dd-HH-mm-ss");
+        return sdf.format(new Date());
+    }
 
 }
 

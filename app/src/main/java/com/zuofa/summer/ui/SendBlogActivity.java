@@ -126,7 +126,7 @@ public class SendBlogActivity extends AppCompatActivity{
                 mSelectPath = data.getStringArrayListExtra(PhotoPicker.EXTRA_RESULT);
                 adapter.changeDate(mSelectPath);
                 StringBuilder sb = new StringBuilder();
-                time = UtilTools.getNowTime();
+                time = UtilTools.getNowTimeString();
                 for (int i = 0; i <mSelectPath.size(); i++) {
                     sb.append(user.getName());
                     sb.append("/");
@@ -145,7 +145,7 @@ public class SendBlogActivity extends AppCompatActivity{
                 mSelectPath = data.getStringArrayListExtra(PhotoPicker.PATHS);
                 adapter.changeDate(mSelectPath);
                 StringBuilder sb = new StringBuilder();
-                time = UtilTools.getNowTime();
+                time = UtilTools.getNowTimeString();
                 for (int i = 0; i <mSelectPath.size(); i++) {
                     sb.append(user.getName());
                     sb.append("/");
@@ -179,7 +179,8 @@ public class SendBlogActivity extends AppCompatActivity{
         Log.e("json",json);
         OkHttpUtils
                 .post()
-                .addParams("method","getBlog")
+                .addParams("method","writeBlog")
+                .addParams("json",json)
                 .url(StaticClass.URL+"WeiboServlet")
                 .build()
                 .execute(new StringCallback() {
@@ -188,12 +189,12 @@ public class SendBlogActivity extends AppCompatActivity{
                     }
                     @Override
                     public void onResponse(String response, int id) {
-                        if ("success".equals(response)) {
+                       // if (Integer.parseInt(response.trim())>0) {
                             uploadImages();
-                            finish();
-                        } else {
-                            Toast.makeText(SendBlogActivity.this, "发送失败", Toast.LENGTH_SHORT).show();
-                        }
+                            //finish();
+                        //} else {
+                        //    Toast.makeText(SendBlogActivity.this, "发送失败", Toast.LENGTH_SHORT).show();
+                       // }
                     }
                 });
     }
@@ -202,21 +203,23 @@ public class SendBlogActivity extends AppCompatActivity{
             count = i;
             String[] pp = photoPath.split(";");
             OkHttpUtils.post()//
-                    .addFile("mFile",pp[i], new File(mSelectPath.get(i)))//
-                    .url(StaticClass.URL+"ImageUploadServlet")
+                    .addFile("mFile",pp[i], new File(mSelectPath.get(i)))
+                    .url(StaticClass.URL+"UploadBlogPhotoServlet")
                     .build()//
                     .execute(new StringCallback() {
                         @Override
                         public void onError(Call call, Exception e, int id) {
-                            //Toast.makeText(SendBlogActivity.this, "上传失败", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(SendBlogActivity.this, "上传失败", Toast.LENGTH_SHORT).show();
                         }
 
                         @Override
                         public void onResponse(String response, int id) {
                             if ("success".equals(response)) {
-                                Toast.makeText(SendBlogActivity.this, "第"+count+"张图片上传成功", Toast.LENGTH_SHORT).show();
+                                //Toast.makeText(SendBlogActivity.this, "第"+count+"张图片上传成功", Toast.LENGTH_SHORT).show();
+                                Toast.makeText(SendBlogActivity.this, "上传成功", Toast.LENGTH_SHORT).show();
+                                finish();
                             } else {
-                                Toast.makeText(SendBlogActivity.this, "第"+count+"张图片上传失败", Toast.LENGTH_SHORT).show();
+                                //Toast.makeText(SendBlogActivity.this, "第"+count+"张图片上传失败", Toast.LENGTH_SHORT).show();
                             }
                         }
                     });
