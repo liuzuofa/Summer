@@ -24,6 +24,7 @@ import com.zhy.http.okhttp.OkHttpUtils;
 import com.zhy.http.okhttp.callback.StringCallback;
 import com.zuofa.summer.R;
 import com.zuofa.summer.bean.User;
+import com.zuofa.summer.utils.MD5Util;
 import com.zuofa.summer.utils.StaticClass;
 
 
@@ -93,7 +94,7 @@ public class RegisterActivity extends BaseActivity implements View.OnClickListen
                         });
                         User user = new User();
                         user.setName(name);
-                        user.setPassword(password);
+                        user.setPassword(MD5Util.toMD5(password));
                         user.setSex(sex);
                         user.setStudentid(studentId);
                         //Log.e("summer",user.toString());

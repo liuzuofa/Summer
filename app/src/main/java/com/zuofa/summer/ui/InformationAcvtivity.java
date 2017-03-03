@@ -21,6 +21,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
 import com.zhy.http.okhttp.OkHttpUtils;
 import com.zhy.http.okhttp.callback.StringCallback;
 import com.zuofa.summer.R;
@@ -46,7 +47,7 @@ public class InformationAcvtivity extends BaseActivity implements View.OnClickLi
 
     private User user;
     private String status;
-    private boolean isUpdate = false;
+    private boolean isUpdate = true;
 
 
     @Override
@@ -63,6 +64,7 @@ public class InformationAcvtivity extends BaseActivity implements View.OnClickLi
         user = application.getUser();
         Log.e("summer", user.toString());
         change_profile = (ImageView) findViewById(R.id.change_profile);
+        Glide.with(this).load(StaticClass.PROFILE_URL+user.getProfile()).into(change_profile);
         change_profile.setOnClickListener(this);
 
         change_nick = (TextView) findViewById(R.id.change_nick);

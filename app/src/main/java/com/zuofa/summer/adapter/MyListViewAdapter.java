@@ -3,12 +3,16 @@ package com.zuofa.summer.adapter;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.animation.GlideAnimation;
+import com.bumptech.glide.request.target.SimpleTarget;
 import com.zhy.http.okhttp.OkHttpUtils;
 import com.zhy.http.okhttp.callback.BitmapCallback;
 import com.zuofa.summer.R;
@@ -20,6 +24,9 @@ import java.util.List;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 import okhttp3.Call;
+
+import static android.R.attr.width;
+import static com.zuofa.summer.R.attr.height;
 
 /**
  * Created by liuzu on 2017/2/21.
@@ -73,8 +80,11 @@ public class MyListViewAdapter extends BaseAdapter {
         viewHolder.listview_time.setText(comment.getDate());
         viewHolder.listview_content.setText(comment.getContent());
         if (!TextUtils.isEmpty(comment.getProfile())) {
-            PicassoUtils.loadImageViewHolder(mContext, StaticClass.PROFILE_URL + comment.getProfile()
-                    , R.drawable.add_pic, R.drawable.add_pic, viewHolder.listview_profile);
+           /* PicassoUtils.loadImageViewHolder(mContext, StaticClass.PROFILE_URL + comment.getProfile()
+                    , R.drawable.add_pic, R.drawable.add_pic, viewHolder.listview_profile);*/
+            Glide.with(mContext).load(StaticClass.PROFILE_URL + comment.getProfile()).error(R.drawable.add_pic)
+                    .into(viewHolder.listview_profile);
+
         }
         return convertView;
     }

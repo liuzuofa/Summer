@@ -18,6 +18,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
 import com.zhy.http.okhttp.OkHttpUtils;
 import com.zhy.http.okhttp.callback.BitmapCallback;
 import com.zhy.http.okhttp.callback.StringCallback;
@@ -85,7 +86,9 @@ public class UserFragment extends Fragment implements View.OnClickListener {
         user = application.getUser();
         user_photo = (CircleImageView) view.findViewById(R.id.user_photo);
         if (user.getProfile() != null) {
-            showProfile(user.getProfile());
+            //showProfile(user.getProfile());
+            Glide.with(this).load(StaticClass.PROFILE_URL + user.getProfile()).error(R.drawable.add_pic)
+                    .into(user_photo);
         }
         user_photo.setOnClickListener(this);
 
@@ -280,6 +283,7 @@ public class UserFragment extends Fragment implements View.OnClickListener {
                             if ("success".equals(response)) {
                                 Toast.makeText(getActivity(), "上传成功", Toast.LENGTH_SHORT).show();
                                 user_photo.setImageBitmap(bitmap);
+                                user.setProfile("/images/user_profile/"+user.getName() + ".png");
                             } else {
                                 Toast.makeText(getActivity(), "上传失败", Toast.LENGTH_SHORT).show();
                             }

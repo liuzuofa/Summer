@@ -15,7 +15,6 @@ import android.os.Bundle;
 
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
-import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -29,7 +28,6 @@ import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
 import com.zhy.http.okhttp.OkHttpUtils;
 import com.zhy.http.okhttp.callback.StringCallback;
 import com.zuofa.summer.R;
@@ -75,8 +73,7 @@ public class SendBlogActivity extends AppCompatActivity{
         send_blogContent = (EditText) findViewById(R.id.send_blogContent);
         PhotoPicker.init(new GlideImageLoader(), null);
         girdView = (GridView) findViewById(R.id.girdView);
-        ArrayList<String> ss = new ArrayList<>();
-        adapter = new GirdImageAdapter(ss, this);
+        adapter = new GirdImageAdapter( this);
         girdView.setAdapter(adapter);
 
         girdView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -93,7 +90,6 @@ public class SendBlogActivity extends AppCompatActivity{
                         pickImage();
                     }
                 } else {
-                    //Log.e("count",i+"");
                     PhotoPicker.preview()
                             .paths(mSelectPath)
                             .currentItem(i)
@@ -107,7 +103,6 @@ public class SendBlogActivity extends AppCompatActivity{
     }
 
     private void pickImage() {
-        //PhotoPicker.init(new GlideImageLoader(), null);
         PhotoPicker.load()
                 .filter(PhotoFilter.build().showGif(false).minSize(2 * 1024)) // 照片属性过滤
                 .gridColumns(3) // 照片列表显示列数
@@ -124,10 +119,12 @@ public class SendBlogActivity extends AppCompatActivity{
         if (requestCode == PhotoPicker.REQUEST_SELECTED) {
             if (resultCode == RESULT_OK) {
                 mSelectPath = data.getStringArrayListExtra(PhotoPicker.EXTRA_RESULT);
+                Log.e("mSelectPath++++",mSelectPath.get(1));
                 adapter.changeDate(mSelectPath);
                 StringBuilder sb = new StringBuilder();
                 time = UtilTools.getNowTimeString();
                 for (int i = 0; i <mSelectPath.size(); i++) {
+                    Log.e("mSelectPath",mSelectPath.get(i));
                     sb.append(user.getName());
                     sb.append("/");
                     sb.append(time);
@@ -137,7 +134,6 @@ public class SendBlogActivity extends AppCompatActivity{
                     sb.append(";");
                 }
                 photoPath = sb.toString();
-
             }
         }
         if (requestCode == PhotoPicker.REQUEST_PREVIEW) {
@@ -160,9 +156,6 @@ public class SendBlogActivity extends AppCompatActivity{
         }
     }
 
-
-
-
     private void sendBlog() {
         MicroBlog microBlog = new MicroBlog();
         microBlog.setName(user.getName());
@@ -175,7 +168,6 @@ public class SendBlogActivity extends AppCompatActivity{
         microBlog.setComment_count(0);
 
         String json=new Gson().toJson(microBlog);
-
         Log.e("json",json);
         OkHttpUtils
                 .post()
@@ -189,12 +181,7 @@ public class SendBlogActivity extends AppCompatActivity{
                     }
                     @Override
                     public void onResponse(String response, int id) {
-                       // if (Integer.parseInt(response.trim())>0) {
-                            uploadImages();
-                            //finish();
-                        //} else {
-                        //    Toast.makeText(SendBlogActivity.this, "发送失败", Toast.LENGTH_SHORT).show();
-                       // }
+                        uploadImages();
                     }
                 });
     }
@@ -202,24 +189,24 @@ public class SendBlogActivity extends AppCompatActivity{
         for (int i = 0; i < mSelectPath.size(); i++) {
             count = i;
             String[] pp = photoPath.split(";");
+            count = i;
             OkHttpUtils.post()//
-                    .addFile("mFile",pp[i], new File(mSelectPath.get(i)))
+                   // .addFile("mFile",pp[i], new File(mSelectPath.get(i)))
+                    .addFile("mFile",pp[i], UtilTools.saveBitmapFile(mSelectPath.get(i),800))
                     .url(StaticClass.URL+"UploadBlogPhotoServlet")
                     .build()//
                     .execute(new StringCallback() {
                         @Override
                         public void onError(Call call, Exception e, int id) {
+                            mSelectPath.remove(count);
                             Toast.makeText(SendBlogActivity.this, "上传失败", Toast.LENGTH_SHORT).show();
                         }
-
                         @Override
                         public void onResponse(String response, int id) {
                             if ("success".equals(response)) {
-                                //Toast.makeText(SendBlogActivity.this, "第"+count+"张图片上传成功", Toast.LENGTH_SHORT).show();
                                 Toast.makeText(SendBlogActivity.this, "上传成功", Toast.LENGTH_SHORT).show();
                                 finish();
                             } else {
-                                //Toast.makeText(SendBlogActivity.this, "第"+count+"张图片上传失败", Toast.LENGTH_SHORT).show();
                             }
                         }
                     });
@@ -247,13 +234,11 @@ public class SendBlogActivity extends AppCompatActivity{
 
 
     public class GirdImageAdapter extends BaseAdapter {
-        private ArrayList<String> mPath = new ArrayList<>();
+        private List<String> mPath = new ArrayList<>();
         private Context mContext;
         public boolean isMax=false;
 
-
-        public GirdImageAdapter(ArrayList<String> path, Context context) {
-            this.mPath.addAll(path);
+        public GirdImageAdapter( Context context) {
             if (mPath.size() < 9) {
                 mPath.add("max");
                 isMax =false;
@@ -277,6 +262,10 @@ public class SendBlogActivity extends AppCompatActivity{
 
         @Override
         public int getCount() {
+            if (mPath.size() == 2){
+                Log.e("+++++++++",mPath.get(0));
+                Log.e("+++++++++",mPath.get(1));
+            }
             return mPath.size();
         }
 

@@ -11,6 +11,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.wuxiaolong.pullloadmorerecyclerview.PullLoadMoreRecyclerView;
@@ -35,13 +36,15 @@ import java.util.List;
 
 import okhttp3.Call;
 
+import static android.widget.NumberPicker.OnScrollListener.SCROLL_STATE_IDLE;
+
 
 /**
  * A simple {@link Fragment} subclass.
  */
 public class HomeFragment extends Fragment implements PullLoadMoreRecyclerView.PullLoadMoreListener {
 
-    private PullLoadMoreRecyclerView mPullLoadMoreRecyclerView;
+    //private PullLoadMoreRecyclerView mPullLoadMoreRecyclerView;
     private MyRecyclerViewAdapter mRecyclerViewAdapter;
     private View view;
     private RecyclerView recyclerView;
@@ -70,21 +73,35 @@ public class HomeFragment extends Fragment implements PullLoadMoreRecyclerView.P
     private void initView() {
         BaseApplication application = (BaseApplication)getActivity().getApplication();
         User user = application.getUser();
-        mPullLoadMoreRecyclerView = (PullLoadMoreRecyclerView) view.findViewById(R.id.mPullRecyclerView);
-        recyclerView = mPullLoadMoreRecyclerView.getRecyclerView();
-        recyclerView.setVerticalScrollBarEnabled(true);
+        //mPullLoadMoreRecyclerView = (PullLoadMoreRecyclerView) view.findViewById(R.id.mPullRecyclerView);
+        recyclerView = (RecyclerView) view.findViewById(R.id.mRecycler_view);
+        LinearLayoutManager manager = new LinearLayoutManager(getContext());
+        manager.setOrientation(LinearLayoutManager.VERTICAL);
+        recyclerView.setLayoutManager(manager);
+        //recyclerView.setVerticalScrollBarEnabled(true);
         //显示下拉刷新
-        mPullLoadMoreRecyclerView.setRefreshing(true);
+        //mPullLoadMoreRecyclerView.setRefreshing(true);
         //设置上拉刷新文字
-        mPullLoadMoreRecyclerView.setFooterViewText("loading");
+        //mPullLoadMoreRecyclerView.setFooterViewText("loading");
 
-        mPullLoadMoreRecyclerView.setLinearLayout();
+        //mPullLoadMoreRecyclerView.setLinearLayout();
 
-        mPullLoadMoreRecyclerView.setOnPullLoadMoreListener(this);
+        //mPullLoadMoreRecyclerView.setOnPullLoadMoreListener(this);
         mRecyclerViewAdapter = new MyRecyclerViewAdapter(getContext());
-        mPullLoadMoreRecyclerView.setAdapter(mRecyclerViewAdapter);
-        mPullLoadMoreRecyclerView.setPullLoadMoreCompleted();
+        //mPullLoadMoreRecyclerView.setAdapter(mRecyclerViewAdapter);
+       // mPullLoadMoreRecyclerView.setPullLoadMoreCompleted();
+        recyclerView.setAdapter(mRecyclerViewAdapter);
         mRecyclerViewAdapter.getUser(user);
+        /*recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
+                if (newState == RecyclerView.SCROLL_STATE_IDLE ){//当屏幕停止滚动时
+                    Glide.with(getContext()).resumeRequests();
+                }else if (newState == RecyclerView.SCROLL_STATE_DRAGGING){
+                    Glide.with(getContext()).pauseRequests();
+                }
+            }
+        });*/
         getData();
     }
 
@@ -103,7 +120,7 @@ public class HomeFragment extends Fragment implements PullLoadMoreRecyclerView.P
                         Gson gson = new Gson();
                         microBlogList = gson.fromJson(response,new TypeToken<List<MicroBlog>>(){}.getType());
                         mRecyclerViewAdapter.addAllData(microBlogList);
-                        mPullLoadMoreRecyclerView.setPullLoadMoreCompleted();
+                        //mPullLoadMoreRecyclerView.setPullLoadMoreCompleted();
                     }
                 });
     }
@@ -134,21 +151,14 @@ public class HomeFragment extends Fragment implements PullLoadMoreRecyclerView.P
 
     @Override
     public void onRefresh() {
-        Log.e("wxl", "onRefresh");
-        setRefresh();
         getData();
 
     }
 
     @Override
     public void onLoadMore() {
-        Log.e("wxl", "onLoadMore");
-        mCount = mCount + 1;
-        getData();
+
     }
 
-    private void setRefresh() {
-        mRecyclerViewAdapter.clearData();
-        mCount = 1;
-    }
+
 }

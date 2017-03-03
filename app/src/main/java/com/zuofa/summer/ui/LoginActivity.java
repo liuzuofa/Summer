@@ -20,8 +20,10 @@ import com.zuofa.summer.MainActivity;
 import com.zuofa.summer.R;
 import com.zuofa.summer.application.BaseApplication;
 import com.zuofa.summer.bean.User;
+import com.zuofa.summer.utils.MD5Util;
 import com.zuofa.summer.utils.ShareUtils;
 import com.zuofa.summer.utils.StaticClass;
+import com.zuofa.summer.utils.UtilTools;
 
 import okhttp3.Call;
 
@@ -89,7 +91,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                         .post()
                         .url(StaticClass.URL+"LoginServlet")
                         .addParams("name", name)
-                        .addParams("password", password)
+                        .addParams("password", MD5Util.toMD5(password))
                         .build()
                         .execute(new StringCallback() {
                             @Override
@@ -99,17 +101,22 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
 
                             @Override
                             public void onResponse(String response, int id) {
-                                Gson gson = new Gson();
-                                user = gson.fromJson(response.trim(), User.class);
-                                Log.e("SUMMER",user.toString());
-                                Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+                                Log.e("login",response);
+                                if ("null".equals(response)) {
+                                    Toast.makeText(LoginActivity.this, "用户名或密码错误", Toast.LENGTH_SHORT).show();
+                                } else {
+                                    Gson gson = new Gson();
+                                    user = gson.fromJson(response.trim(), User.class);
+                                    // Log.e("SUMMER",user.toString());
+                                    Intent intent = new Intent(LoginActivity.this, MainActivity.class);
                                 /*Bundle bundle = new Bundle();
                                 bundle.putSerializable("user", user);
                                 intent.putExtras(bundle);*/
-                                BaseApplication application = (BaseApplication) getApplication();
-                                application.setUser(user);
-                                startActivity(intent);
-                                finish();
+                                    BaseApplication application = (BaseApplication) getApplication();
+                                    application.setUser(user);
+                                    startActivity(intent);
+                                    finish();
+                                }
                             }
                         });
 

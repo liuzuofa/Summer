@@ -24,6 +24,7 @@ public class RQcodeActivity extends BaseActivity{
 
     private ImageView qrCode;
 
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -32,6 +33,7 @@ public class RQcodeActivity extends BaseActivity{
     }
 
     private void initView() {
+
         BaseApplication application = (BaseApplication) getApplication();
         User user =application.getUser();
         qrCode = (ImageView) findViewById(R.id.qrCode);
@@ -39,7 +41,7 @@ public class RQcodeActivity extends BaseActivity{
         int width = getResources().getDisplayMetrics().widthPixels;
 
         Bitmap qrCodeBitmap = EncodingUtils.createQRCode(user.getName(), width / 2, width / 2,
-                BitmapFactory.decodeResource(getResources(), R.mipmap.ic_launcher));
+                BitmapFactory.decodeResource(getResources(),R.drawable.add_pic));
         qrCode.setImageBitmap(qrCodeBitmap);
     }
 }

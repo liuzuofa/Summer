@@ -35,7 +35,7 @@ public class GlideImageLoader extends PhotoPickerImageLoader<ImageView, PhotoVie
                 .placeholder(getDefaultPlaceHolder())
                 .error(getDefaultPlaceHolder())
                 .override(width, height)
-                .diskCacheStrategy(DiskCacheStrategy.NONE) //不缓存到SD卡
+                .diskCacheStrategy(DiskCacheStrategy.ALL) //不缓存到SD卡
                 .skipMemoryCache(false)
                 .centerCrop()
                 .crossFade()
