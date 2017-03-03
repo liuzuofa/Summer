@@ -59,15 +59,15 @@ public class MainActivity extends AppCompatActivity implements
     }
 
     private void initData() {
-        if (mNewsFragment == null) {
-            mNewsFragment = NewsFragment.newInstance("NewsFragment");
+        if (mHomeFragment == null) {
+            mHomeFragment = HomeFragment.newInstance("HomeFragment");
         }
-        if (!mNewsFragment.isAdded()) {
+        if (!mHomeFragment.isAdded()) {
             // 提交事务
             getSupportFragmentManager().beginTransaction()
-                    .add(R.id.frame_layout, mNewsFragment).commit();
+                    .add(R.id.frame_layout, mHomeFragment).commit();
             // 记录当前Fragment
-            currentFragment = mNewsFragment;
+            currentFragment = mHomeFragment;
         }
     }
 
@@ -75,11 +75,11 @@ public class MainActivity extends AppCompatActivity implements
     public void onTabSelected(int position) {
         switch (position) {
             case 0:
-                if (mNewsFragment == null) {
-                    mNewsFragment = NewsFragment.newInstance("NewsFragment");
+                if (mHomeFragment == null) {
+                    mHomeFragment = HomeFragment.newInstance("HomeFragment");
                 }
-                addOrShowFragment(mNewsFragment);
-                menuItem.setVisible(false);
+                addOrShowFragment(mHomeFragment);
+                menuItem.setVisible(true);
                 break;
             case 1:
                 if (mDynamicFragment == null) {
@@ -89,11 +89,11 @@ public class MainActivity extends AppCompatActivity implements
                 menuItem.setVisible(false);
                 break;
             case 2:
-                if (mHomeFragment == null) {
-                    mHomeFragment = HomeFragment.newInstance("HomeFragment");
+                if (mNewsFragment == null) {
+                    mNewsFragment = NewsFragment.newInstance("NewsFragment");
                 }
-                addOrShowFragment(mHomeFragment);
-                menuItem.setVisible(true);
+                addOrShowFragment(mNewsFragment);
+                menuItem.setVisible(false);
                 break;
             case 3:
                 if (mUserFragment == null) {

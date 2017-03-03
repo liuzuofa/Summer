@@ -123,6 +123,12 @@
 
         </activity>
 
+        <!--招聘网页详情页面-->
+        <activity
+            android:name="com.zuofa.summer.ui.WebViewActivity">
+
+        </activity>
+
 
     </application>
 

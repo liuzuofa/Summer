@@ -3,6 +3,8 @@ package com.zuofa.summer.application;
 import android.app.Application;
 
 import com.zhy.http.okhttp.OkHttpUtils;
+import com.zhy.http.okhttp.cookie.CookieJarImpl;
+import com.zhy.http.okhttp.cookie.store.PersistentCookieStore;
 import com.zuofa.summer.bean.User;
 import com.zuofa.summer.utils.StaticClass;
 
@@ -24,12 +26,14 @@ public class BaseApplication extends Application {
         //Bmob.initialize(this, StaticClass.Bmob_Application_ID);
 
         //初始化Okhttp
+        CookieJarImpl cookieJar = new CookieJarImpl(new PersistentCookieStore(getApplicationContext()));
+
         OkHttpClient okHttpClient = new OkHttpClient.Builder()
 //                .addInterceptor(new LoggerInterceptor("TAG"))
                 .connectTimeout(10000L, TimeUnit.MILLISECONDS)
                 .readTimeout(10000L, TimeUnit.MILLISECONDS)
                 //其他配置
-
+                .cookieJar(cookieJar)
                 .build();
 
         OkHttpUtils.initClient(okHttpClient);
