@@ -16,6 +16,7 @@ public class User implements Serializable {
     private String profile;
     private String studentid;
     private String introduction;
+    private String token;
 
     public int getId() {
         return id;
@@ -68,6 +69,14 @@ public class User implements Serializable {
         this.introduction = introduction;
     }
 
+    public String getToken() {
+        return token;
+    }
+
+    public void setToken(String token) {
+        this.token = token;
+    }
+
     @Override
     public String toString() {
         return "User{" +
@@ -79,6 +88,7 @@ public class User implements Serializable {
                 ", profile='" + profile + '\'' +
                 ", studentid='" + studentid + '\'' +
                 ", introduction='" + introduction + '\'' +
+                ", token='" + token + '\'' +
                 '}';
     }
 }

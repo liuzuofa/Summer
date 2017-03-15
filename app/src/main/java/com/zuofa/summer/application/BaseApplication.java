@@ -10,6 +10,7 @@ import com.zuofa.summer.utils.StaticClass;
 
 import java.util.concurrent.TimeUnit;
 
+import io.rong.imkit.RongIM;
 import okhttp3.OkHttpClient;
 
 /**
@@ -24,7 +25,8 @@ public class BaseApplication extends Application {
         super.onCreate();
         //Bmob初始化
         //Bmob.initialize(this, StaticClass.Bmob_Application_ID);
-
+        //初始化融云
+        RongIM.init(this);
         //初始化Okhttp
         CookieJarImpl cookieJar = new CookieJarImpl(new PersistentCookieStore(getApplicationContext()));
 

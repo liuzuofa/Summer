@@ -3,6 +3,7 @@ package com.zuofa.summer.fragment;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -44,12 +45,12 @@ import static android.widget.NumberPicker.OnScrollListener.SCROLL_STATE_IDLE;
  */
 public class HomeFragment extends Fragment implements PullLoadMoreRecyclerView.PullLoadMoreListener {
 
-    //private PullLoadMoreRecyclerView mPullLoadMoreRecyclerView;
     private MyRecyclerViewAdapter mRecyclerViewAdapter;
     private View view;
     private RecyclerView recyclerView;
     private int mCount;
     private List<MicroBlog> microBlogList = new ArrayList<>();
+    private SwipeRefreshLayout swipe_refresh;
 
     public static HomeFragment newInstance(String argument) {
         Bundle bundle = new Bundle();
@@ -73,35 +74,24 @@ public class HomeFragment extends Fragment implements PullLoadMoreRecyclerView.P
     private void initView() {
         BaseApplication application = (BaseApplication)getActivity().getApplication();
         User user = application.getUser();
-        //mPullLoadMoreRecyclerView = (PullLoadMoreRecyclerView) view.findViewById(R.id.mPullRecyclerView);
         recyclerView = (RecyclerView) view.findViewById(R.id.mRecycler_view);
         LinearLayoutManager manager = new LinearLayoutManager(getContext());
         manager.setOrientation(LinearLayoutManager.VERTICAL);
         recyclerView.setLayoutManager(manager);
-        //recyclerView.setVerticalScrollBarEnabled(true);
-        //显示下拉刷新
-        //mPullLoadMoreRecyclerView.setRefreshing(true);
-        //设置上拉刷新文字
-        //mPullLoadMoreRecyclerView.setFooterViewText("loading");
-
-        //mPullLoadMoreRecyclerView.setLinearLayout();
-
-        //mPullLoadMoreRecyclerView.setOnPullLoadMoreListener(this);
         mRecyclerViewAdapter = new MyRecyclerViewAdapter(getContext());
-        //mPullLoadMoreRecyclerView.setAdapter(mRecyclerViewAdapter);
-       // mPullLoadMoreRecyclerView.setPullLoadMoreCompleted();
         recyclerView.setAdapter(mRecyclerViewAdapter);
         mRecyclerViewAdapter.getUser(user);
-        /*recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
+
+        swipe_refresh = (SwipeRefreshLayout) view.findViewById(R.id.swipe_refresh);
+        //swipe_refresh.setColorSchemeColors(R.color.colorPrimary);
+        swipe_refresh.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
-            public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
-                if (newState == RecyclerView.SCROLL_STATE_IDLE ){//当屏幕停止滚动时
-                    Glide.with(getContext()).resumeRequests();
-                }else if (newState == RecyclerView.SCROLL_STATE_DRAGGING){
-                    Glide.with(getContext()).pauseRequests();
-                }
+            public void onRefresh() {
+                getData();
+                swipe_refresh.setRefreshing(false);
             }
-        });*/
+        });
+
         getData();
     }
 
@@ -120,7 +110,6 @@ public class HomeFragment extends Fragment implements PullLoadMoreRecyclerView.P
                         Gson gson = new Gson();
                         microBlogList = gson.fromJson(response,new TypeToken<List<MicroBlog>>(){}.getType());
                         mRecyclerViewAdapter.addAllData(microBlogList);
-                        //mPullLoadMoreRecyclerView.setPullLoadMoreCompleted();
                     }
                 });
     }

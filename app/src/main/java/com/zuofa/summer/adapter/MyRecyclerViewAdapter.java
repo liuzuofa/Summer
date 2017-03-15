@@ -234,6 +234,7 @@ public class MyRecyclerViewAdapter extends RecyclerView.Adapter<MyRecyclerViewAd
     }
 
     public void addAllData(List<MicroBlog> dataList) {
+        microBlogsList.clear();
         this.microBlogsList.addAll(dataList);
         notifyDataSetChanged();
     }

@@ -1,8 +1,8 @@
 <component name="libraryTable">
   <library name="xrecyclerview-1.2.7">
     <CLASSES>
-      <root url="file://$PROJECT_DIR$/app/build/intermediates/exploded-aar/com.jcodecraeer/xrecyclerview/1.2.7/res" />
-      <root url="jar://$PROJECT_DIR$/app/build/intermediates/exploded-aar/com.jcodecraeer/xrecyclerview/1.2.7/jars/classes.jar!/" />
+      <root url="file://$USER_HOME$/.android/build-cache/dafcd910945ec191b10ba0b449ec4595364d1767/output/res" />
+      <root url="jar://$USER_HOME$/.android/build-cache/dafcd910945ec191b10ba0b449ec4595364d1767/output/jars/classes.jar!/" />
     </CLASSES>
     <JAVADOC />
     <SOURCES>

@@ -40,6 +40,7 @@ public class RQcodeActivity extends BaseActivity{
         //屏幕的宽
         int width = getResources().getDisplayMetrics().widthPixels;
 
+
         Bitmap qrCodeBitmap = EncodingUtils.createQRCode(user.getName(), width / 2, width / 2,
                 BitmapFactory.decodeResource(getResources(),R.drawable.add_pic));
         qrCode.setImageBitmap(qrCodeBitmap);
